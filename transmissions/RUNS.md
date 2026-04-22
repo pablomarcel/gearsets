@@ -1,546 +1,487 @@
-#### Simpson Transmission
+#### Ford C4 - 3 Speed Transmission
+
+### Solves a transmission spec - all states
 
 ```bash
-python -m kinematics.simpson_ratio_map \
-  --sun-min 20 \
-  --sun-max 40 \
-  --ring-min 50 \
-  --ring-max 90
+python -m cli \
+  --spec in/transmission_spec_ford_c4.json \
+  --schedule in/shift_schedule_ford_c4.json
 ```
 
+### Solves a transmission spec - all states - show speeds
+
 ```bash
-python -m kinematics.simpson_ratio_map \
-  --sun-min 20 \
-  --sun-max 40 \
-  --ring-min 50 \
-  --ring-max 90 \
-  --log-level INFO
+python -m cli \
+  --spec in/transmission_spec_ford_c4.json \
+  --schedule in/shift_schedule_ford_c4.json \
+  --show-speeds
 ```
 
+### Solves a transmission spec - 3rd gear - shows speeds
+
 ```bash
-python -m kinematics.simpson_ratio_map \
-  --sun-min 20 \
-  --sun-max 40 \
-  --ring-min 50 \
-  --ring-max 90 \
-  --validate-with-solver \
-  --log-level INFO
+python -m cli \
+  --spec in/transmission_spec_ford_c4.json \
+  --schedule in/shift_schedule_ford_c4.json \
+  --state 3rd \
+  --show-speeds
 ```
 
-```bash
-python -m kinematics.simpson_ratio_map \
-  --sun-min 20 \
-  --sun-max 40 \
-  --ring-min 50 \
-  --ring-max 90 \
-  --no-progress \
-  --log-level INFO
-```
+### Solves a transmission spec - shows ratios only - ford_c4_reference
 
 ```bash
-python -m kinematics.simpson_ratio_map \
-  --log-level INFO
-```
-
-```bash
-python -m kinematics.simpson_ratio_map \
-  --no-progress \
-  --log-level INFO
-```
-
-#### Ravigneaux Transmission
-
-```bash
-python -m kinematics.ravigneaux_ratio_map \
-  --sun-min 20 \
-  --sun-max 40 \
-  --ring-min 50 \
-  --ring-max 90 \
-  --log-level INFO \
-  --print-audit
-```
-
-```bash
-python -m kinematics.ravigneaux_ratio_map \
-  --sun-min 20 \
-  --sun-max 40 \
-  --ring-min 50 \
-  --ring-max 90 \
-  --log-level INFO \
-  --validate-with-solver \
-  --print-audit
-```
-
-#### Ford C4 3 Speed Transmission
-
-```bash
-python -m transmissions.three_speed \
-  --state all \
-  --Ns 33 \
-  --Nr 72
-```
-
-```bash
-python -m transmissions.three_speed \
-  --state all \
-  --Ns-front 34 \
-  --Nr-front 72 \
-  --Ns-rear 36 \
-  --Nr-rear 74
-```
-
-```bash
-python -m transmissions.three_speed \
-  --state all
-```
-
-```bash
-python -m transmissions.three_speed \
-  --state 3rd
-```
-
-```bash
-python -m transmissions.three_speed \
-  --state rev \
-  --json
-```
-
-```bash
-python -m transmissions.three_speed \
-  --state all \
+python -m cli \
+  --spec in/transmission_spec_ford_c4.json \
+  --schedule in/shift_schedule_ford_c4.json \
+  --preset ford_c4_reference \
   --ratios-only
 ```
 
+### Solves a transmission spec - overrides teeth count
+
 ```bash
-python -m transmissions.three_speed \
+python -m cli \
+  --spec in/transmission_spec_ford_c4.json \
+  --schedule in/shift_schedule_ford_c4.json \
+  --set PG_front.Ns=23 PG_front.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_c4.json \
   --list-presets
 ```
 
+#### Ravigneaux - 4 Speed Transmission
+
+### Solves a transmission spec - all states
+
 ```bash
-python -m transmissions.three_speed \
-  --state all \
-  --preset ford_c4_reference
+python -m cli \
+  --spec in/transmission_spec_ravigneaux.json \
+  --schedule in/shift_schedule_ravigneaux.json
 ```
 
-#### Ravineaux 4 Speed Transmission
+### Solves a transmission spec - all states - show speeds
 
 ```bash
-python -m transmissions.four_speed \
-  --state all
+python -m cli \
+  --spec in/transmission_spec_ravigneaux.json \
+  --schedule in/shift_schedule_ravigneaux.json \
+  --show-speeds
 ```
 
-```bash
-python -m transmissions.four_speed \
-  --state 4th
-```
+### Solves a transmission spec - 3rd gear - shows speeds
 
 ```bash
-python -m transmissions.four_speed \
-  --state all --json
+python -m cli \
+  --spec in/transmission_spec_ravigneaux.json \
+  --schedule in/shift_schedule_ravigneaux.json \
+  --state 3rd \
+  --show-speeds
 ```
 
+### Solves a transmission spec - shows ratios only - ravigneaux_reference
+
 ```bash
-python -m transmissions.four_speed --state all \
+python -m cli \
+  --spec in/transmission_spec_ravigneaux.json \
+  --schedule in/shift_schedule_ravigneaux.json \
+  --preset ravigneaux_reference \
   --ratios-only
 ```
 
+### Solves a transmission spec - overrides teeth count
+
 ```bash
-python -m transmissions.four_speed \
+python -m cli \
+  --spec in/transmission_spec_ravigneaux.json \
+  --schedule in/shift_schedule_ravigneaux.json \
+  --set PG_front.Ns=23 PG_front.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ravigneaux.json \
   --list-presets
 ```
 
-#### W5A-580 5 Speed Transmission
+#### ZF 4HP22 - 4 Speed Transmission
+
+### Solves a transmission spec - all states
 
 ```bash
-python -m transmissions.five_speed \
-  --state all
-```
-
-```bash
-python -m transmissions.five_speed \
-  --state all \
-  --ratios-only
-```
-
-```bash
-python -m transmissions.five_speed \
-  --Ns-f 46 --Nr-f 72 \
-  --Ns-r 68 --Nr-r 122 \
-  --Ns-m 37 --Nr-m 91
-```
-
-#### Allison 6 Speed Transmission
-
-```bash
-python -m transmissions.six_speed \
-  --state all
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state 4th
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --json
-```
-
-# Allison 4000
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --Ns1 73 \
-  --Nr1 125 \
-  --Ns2 43 \
-  --Nr2 109 \
-  --Ns3 39 \
-  --Nr3 101
-```
-
-# Allison 3000
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --Ns1 67 \
-  --Nr1 109 \
-  --Ns2 49 \
-  --Nr2 91 \
-  --Ns3 39 \
-  --Nr3 97
-```
-
-# Allison 2000
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --Ns1 67 \
-  --Nr1 109 \
-  --Ns2 49 \
-  --Nr2 91 \
-  --Ns3 39 \
-  --Nr3 97
-```
-
-# Allison 1000
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --Ns1 61 \
-  --Nr1 111 \
-  --Ns2 57 \
-  --Nr2 111 \
-  --Ns3 49 \
-  --Nr3 103
-```
-
-# Allison Bad Combination of Teeth Numbers
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --Ns1 61 \
-  --Nr1 100 \
-  --Ns2 41 \
-  --Nr2 79 \
-  --Ns3 41 \
-  --Nr3 79
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --ratios-only
-```
-
-```bash
-python -m transmissions.six_speed \
-  --list-presets
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --preset allison_4000
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --preset allison_3000
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --preset allison_2000
-```
-
-```bash
-python -m transmissions.six_speed \
-  --state all \
-  --preset allison_1000
-```
-
-#### W7A-700 7 Speed Transmission
-
-```bash
-python -m transmissions.seven_speed \
-  --state all
-```
-
-```bash
-python -m transmissions.seven_speed \
-  --state all \
-  --ratios-only
-```
-
-```bash
-python -m transmissions.seven_speed \
-  --Ns-a 52 --Nr-a 106 \
-  --Ns-b 78 --Nr-b 100 \
-  --Ns-r 66 --Nr-r 164 \
-  --Ns-m 62 --Nr-m 168
-```
-
-#### ZF8HP 8 Speed Transmission
-
-```bash
-python -m transmissions.eight_speed \
-  --state all
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --ratios-only
-```
-
-# Override tooth counts manually - 4th Generation
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --Ns1 48 --Nr1 96 \
-  --Ns2 54 --Nr2 96 \
-  --Ns3 60 --Nr3 108 \
-  --Ns4 24 --Nr4 96
-```
-
-# Override tooth counts manually - 3rd Generation
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --Ns1 48 --Nr1 96 \
-  --Ns2 54 --Nr2 96 \
-  --Ns3 60 --Nr3 96 \
-  --Ns4 24 --Nr4 102
-```
-
-# Override tooth counts manually - 2nd Generation
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --Ns1 48 --Nr1 96 \
-  --Ns2 48 --Nr2 96 \
-  --Ns3 60 --Nr3 96 \
-  --Ns4 28 --Nr4 104
-```
-
-# Single-state with manual counts
-
-```bash
-python -m transmissions.eight_speed \
-  --state 1st \
-  --Ns1 48 --Nr1 96 \
-  --Ns2 48 --Nr2 96 \
-  --Ns3 38 --Nr3 96 \
-  --Ns4 23 --Nr4 85
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state 1st
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state 6th
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state rev
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state reverse
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --json
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state 4th \
-  --json
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state 8th \
-  --ratios-only
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --show-topology
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --list-presets
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp51_gen3
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp50_gen2_candidate
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp45_gen1_candidate
-```
-
-# Preset plus manual override
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp51_gen3 \
-  --Ns4 24 --Nr4 85
-```
-
-# Strict / relaxed geometry
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --strict-geometry
-```
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp51_gen3 \
-  --strict-geometry
-```
-
-# All gears, JSON, preset
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp51_gen3 \
-  --json
-```
-
-# All gears, ratios only, manual tooth counts
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --ratios-only \
-  --Ns1 48 --Nr1 96 \
-  --Ns2 48 --Nr2 96 \
-  --Ns3 38 --Nr3 96 \
-  --Ns4 23 --Nr4 85
-```
-
-# Show topology with preset
-
-```bash
-python -m transmissions.eight_speed \
-  --state all \
-  --preset zf_8hp45_reference_legacy \
-  --show-topology
-```
-
-#### Mercedes 9G-tronic 9 Speed Transmission
-
-# All states
-
-```bash
-python -m transmissions.nine_speed \
-  --state all
-```
-# Ratios only
-
-```bash
-python -m transmissions.nine_speed \
-  --state all \
-  --ratios-only
-```
-
-# Show speeds
-
-```bash
-python -m transmissions.nine_speed \
+python -m cli \
+  --spec in/transmission_spec_zf_4hp.json \
+  --schedule in/shift_schedule_zf_4hp.json \
   --state all \
   --show-speeds
 ```
 
-# 9G-tronic preset
+#### ZF 5HP24 - 5 Speed Transmission
+
+### Solves a transmission spec - all states
 
 ```bash
-python -m transmissions.nine_speed \
-  --preset mb_9gtronic_2016
-```
-
-# Override tooth counts manually
-
-```bash
-python -m transmissions.nine_speed \
+python -m cli \
+  --spec in/transmission_spec_zf_5hp.json \
+  --schedule in/shift_schedule_zf_5hp.json \
   --state all \
-  --S1 46 --R1 98 \
-  --S2 44 --R2 100 \
-  --S3 36 --R3 84 \
-  --S4 34 --R4 86
+  --show-speeds
 ```
 
-#### Ford 10R80 10 Speed Transmission
+#### Mercedes Benz W5A-580 - 5 Speed Transmission
+
+### Solves a transmission spec - all states
 
 ```bash
-python -m transmissions.ten_speed \
-  --state all
+python -m cli \
+  --spec in/transmission_spec_w5a_580.json \
+  --schedule in/shift_schedule_w5a_580.json
 ```
-# Override tooth counts manually
+
+### Solves a transmission spec - all states - show speeds
 
 ```bash
-python -m transmissions.ten_speed \
-  --state all \
-  --Ns1 45 --Nr1 99 \
-  --Ns2 51 --Nr2 89 \
-  --Ns3 63 --Nr3 101 \
-  --Ns4 23 --Nr4 85
+python -m cli \
+  --spec in/transmission_spec_w5a_580.json \
+  --schedule in/shift_schedule_w5a_580.json \
+  --show-speeds
+```
+
+### Solves a transmission spec - 8th gear - shows speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w5a_580.json \
+  --schedule in/shift_schedule_w5a_580.json \
+  --state 5th \
+  --show-speeds
+```
+
+### Solves a transmission spec - shows ratios only - w5a580_candidate
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w5a_580.json \
+  --schedule in/shift_schedule_w5a_580.json \
+  --preset w5a580_candidate \
+  --ratios-only
+```
+
+### Solves a transmission spec - overrides teeth count
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w5a_580.json \
+  --schedule in/shift_schedule_w5a_580.json \
+  --set PG_forward.Ns=23 PG_forward.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w5a_580.json \
+  --list-presets
+```
+
+#### Allison 2000 Series - 6 Speed Transmission
+
+### Solves a transmission spec - all states
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_allison_2k.json \
+  --schedule in/shift_schedule_allison_2k.json
+```
+
+### Solves a transmission spec - all states - show speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_allison_2k.json \
+  --schedule in/shift_schedule_allison_2k.json \
+  --show-speeds
+```
+
+### Solves a transmission spec - 8th gear - shows speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_allison_2k.json \
+  --schedule in/shift_schedule_allison_2k.json \
+  --state 6th \
+  --show-speeds
+```
+
+### Solves a transmission spec - shows ratios only - allison_1000_candidate
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_allison_2k.json \
+  --schedule in/shift_schedule_allison_2k.json \
+  --preset allison_1000_candidate \
+  --ratios-only
+```
+
+### Solves a transmission spec - overrides teeth count
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_allison_2k.json \
+  --schedule in/shift_schedule_allison_2k.json \
+  --set PG1.Ns=23 PG1.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_allison_2k.json \
+  --list-presets
+```
+
+#### Mercedes Benz W7A-700 - 7 Speed Transmission
+
+### Solves a transmission spec - all states
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w7a_700.json \
+  --schedule in/shift_schedule_w7a_700.json
+```
+
+### Solves a transmission spec - all states - show speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w7a_700.json \
+  --schedule in/shift_schedule_w7a_700.json \
+  --show-speeds
+```
+
+### Solves a transmission spec - 8th gear - shows speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w7a_700.json \
+  --schedule in/shift_schedule_w7a_700.json \
+  --state 7th \
+  --show-speeds
+```
+
+### Solves a transmission spec - shows ratios only - w7a700_candidate
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w7a_700.json \
+  --schedule in/shift_schedule_w7a_700.json \
+  --preset w7a700_candidate \
+  --ratios-only
+```
+
+### Solves a transmission spec - overrides teeth count
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w7a_700.json \
+  --schedule in/shift_schedule_w7a_700.json \
+  --set PG_A.Ns=23 PG_A.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w7a_700.json \
+  --list-presets
+```
+
+#### ZF 8HP - 8 Speed Transmission
+
+### Solves a transmission spec - all states
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --schedule in/shift_schedule_zf_8hp.json
+```
+
+### Solves a transmission spec - all states - show speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --schedule in/shift_schedule_zf_8hp.json \
+  --show-speeds
+```
+
+### Solves a transmission spec - 8th gear - shows speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --schedule in/shift_schedule_zf_8hp.json \
+  --state 8th \
+  --show-speeds
+```
+
+### Solves a transmission spec - shows ratios only - legacy
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --schedule in/shift_schedule_zf_8hp.json \
+  --preset legacy \
+  --ratios-only
+```
+
+### Solves a transmission spec - shows ratios only - base
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --schedule in/shift_schedule_zf_8hp.json \
+  --preset base \
+  --ratios-only
+```
+
+### Solves a transmission spec - overrides teeth count
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --schedule in/shift_schedule_zf_8hp.json \
+  --set P4.Ns=23 P4.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_zf_8hp.json \
+  --list-presets
+```
+
+#### Mercedes Benz W9A-700 - 9 Speed Transmission
+
+### Solves a transmission spec - all states
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w9a_700.json \
+  --schedule in/shift_schedule_w9a_700.json
+```
+
+### Solves a transmission spec - all states - show speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w9a_700.json \
+  --schedule in/shift_schedule_w9a_700.json \
+  --show-speeds
+```
+
+### Solves a transmission spec - 8th gear - shows speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w9a_700.json \
+  --schedule in/shift_schedule_w9a_700.json \
+  --state 8th \
+  --show-speeds
+```
+
+### Solves a transmission spec - shows ratios only - mb_9gtronic_2013
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w9a_700.json \
+  --schedule in/shift_schedule_w9a_700.json \
+  --preset mb_9gtronic_2013 \
+  --ratios-only
+```
+
+### Solves a transmission spec - overrides teeth count
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w9a_700.json \
+  --schedule in/shift_schedule_w9a_700.json \
+  --set P4.Ns=23 P4.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_w9a_700.json \
+  --list-presets
+```
+
+#### Ford 10R80 - 10 Speed Transmission
+
+### Solves a transmission spec - all states
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_10R80.json \
+  --schedule in/shift_schedule_ford_10R80.json
+```
+
+### Solves a transmission spec - all states - show speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_10R80.json \
+  --schedule in/shift_schedule_ford_10R80.json \
+  --show-speeds
+```
+
+### Solves a transmission spec - 8th gear - shows speeds
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_10R80.json \
+  --schedule in/shift_schedule_ford_10R80.json \
+  --state 8th \
+  --show-speeds
+```
+
+### Solves a transmission spec - shows ratios only - ford_10r80_estimated
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_10R80.json \
+  --schedule in/shift_schedule_ford_10R80.json \
+  --preset ford_10r80_estimated \
+  --ratios-only
+```
+
+### Solves a transmission spec - overrides teeth count
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_10R80.json \
+  --schedule in/shift_schedule_ford_10R80.json \
+  --set P4.Ns=23 P4.Nr=85
+```
+
+### List presets
+
+```bash
+python -m cli \
+  --spec in/transmission_spec_ford_10R80.json \
+  --list-presets
+```
+
+#### GUI
+
+```bash
+python -m gui_core_trans
 ```
