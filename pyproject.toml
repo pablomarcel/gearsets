@@ -1,0 +1,57 @@
+# pyproject.toml
+[project]
+name = "gearsets"
+version = "0.1.0"
+description = "Python engineering tools for planetary gearsets and automatic-transmission kinematic analysis."
+requires-python = ">=3.9"
+dependencies = [
+  "numpy",
+  "sympy",
+  "pyyaml",
+  "rich",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "pytest-xdist",
+  "pytest-cov",
+  "sphinx",
+  "furo",
+]
+gui = [
+  "dearpygui",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Root-layout project.
+# The importable package currently lives at:
+#
+#   transmissions/
+#
+# Keep an __init__.py file in transmissions/ and transmissions/core/
+# so editable installs and Sphinx autodoc can import the package cleanly.
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "transmissions",
+  "transmissions.*",
+]
+exclude = [
+  "**/tests*",
+  "**/__pycache__*",
+  "out*",
+  "in*",
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "transmissions/tests",
+]
+addopts = "-ra"
