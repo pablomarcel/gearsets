@@ -18,24 +18,72 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      PYTHON_VERSION: "3.11"
+      SPHINX_VERSION: "8.2.3"
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
           cache: "pip"
 
-      - name: Install project deps + Sphinx
+      - name: Install project + docs dependencies
+        shell: bash
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install sphinx furo || pip install sphinx alabaster
-          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
-            pip install -e .
+          set -euo pipefail
+
+          python -m pip install --upgrade pip setuptools wheel
+
+          # Do not blindly install requirements.txt for docs deployment when it
+          # contains a Sphinx 9.x pin. Sphinx 9.1.0 requires Python >= 3.12 and
+          # breaks Python 3.11 before the docs build starts.
+          #
+          # Gearsets should use pyproject.toml as the source of truth for runtime
+          # dependencies and the docs extra should pin Sphinx to 8.2.3.
+          if [ -f pyproject.toml ]; then
+            python -m pip install -e ".[docs]"
+          else
+            # Fallback for repos without pyproject.toml:
+            # install requirements.txt after removing doc-builder pins that are
+            # managed explicitly below.
+            if [ -f requirements.txt ]; then
+              grep -viE '^(sphinx|furo|alabaster|docutils|snowballstemmer)([=<>!~ ]|$)' requirements.txt > /tmp/gearsets-runtime-requirements.txt || true
+              if [ -s /tmp/gearsets-runtime-requirements.txt ]; then
+                python -m pip install -r /tmp/gearsets-runtime-requirements.txt
+              fi
+            fi
+            python -m pip install "sphinx==${SPHINX_VERSION}" furo
           fi
+
+          # Belt-and-suspenders: force the deploy-safe Sphinx version even if
+          # requirements.txt or a transitive install tried to move it.
+          python -m pip install --upgrade --force-reinstall "sphinx==${SPHINX_VERSION}" furo
+
+          python - <<'PY'
+          import sphinx
+          print("Sphinx version:", sphinx.__version__)
+          PY
         env:
           PIP_DISABLE_PIP_VERSION_CHECK: 1
+
+      - name: Ensure package docs skeletons exist
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Gearsets currently exposes the transmissions package.
+          # If docs are missing, generate the standard package-level Sphinx
+          # skeleton using the CLI helper.
+          if [ -d "transmissions" ] && [ ! -d "transmissions/docs" ]; then
+            echo "==> Creating transmissions/docs"
+            python -m transmissions.cli sphinx-skel transmissions/docs
+          fi
 
       - name: Build all Sphinx projects under package docs folders
         env:
@@ -44,9 +92,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Gearsets currently uses package-level docs such as:
-          #   transmissions/docs
-          # This discovery also supports future packages added beside transmissions.
           mapfile -t DOCS < <(find . -maxdepth 4 -type d -name docs | sort)
 
           if [ "${#DOCS[@]}" -eq 0 ]; then
@@ -103,16 +148,13 @@ jobs:
           else:
               routes = []
 
+          # Only routes copied from package-level docs are included. This avoids
+          # accidental cards for Sphinx internal pages such as modules/index.html.
           display = {
               "transmissions": (
                   "TX",
                   "Transmissions",
                   "Universal planetary-gearset transmission analysis from JSON topology and shift schedules.",
-              ),
-              "transmissions/core": (
-                  "CG",
-                  "Core Gearset Solvers",
-                  "Planetary gearset, clutch, brake, shaft, and symbolic kinematic solver internals.",
               ),
           }
 
@@ -158,9 +200,7 @@ jobs:
               return f"Package-level API documentation and reproducible CLI workflows for {title}."
 
           def route_sort_key(route: str) -> tuple[int, str]:
-              preferred = [
-                  "transmissions",
-              ]
+              preferred = ["transmissions"]
               top = route.split("/", 1)[0]
               try:
                   rank = preferred.index(top)
@@ -347,7 +387,7 @@ jobs:
               </section>
 
               <footer>
-                Built with Sphinx and GitHub Pages from Gearsets package documentation folders.
+                Built with Sphinx 8.2.3 and GitHub Pages from Gearsets package documentation folders.
               </footer>
             </div>
           </body>

@@ -16,7 +16,11 @@ dev = [
   "pytest>=8",
   "pytest-xdist",
   "pytest-cov",
-  "sphinx",
+  "sphinx==8.2.3",
+  "furo",
+]
+docs = [
+  "sphinx==8.2.3",
   "furo",
 ]
 gui = [

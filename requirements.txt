@@ -10,7 +10,7 @@ colorama==0.4.6
 CoolProp==7.2.0
 coverage==7.13.5
 dearpygui==2.1.1
-docutils==0.22.4
+docutils==0.21.2
 execnet==2.1.2
 gearbox==0.3.2
 gekko==1.3.2
@@ -39,14 +39,12 @@ pytest-xdist==3.8.0
 requests==2.33.1
 rich==15.0.0
 roman-numerals==4.1.0
+roman-numerals-py==4.1.0
 ruamel.yaml==0.19.1
 scipy==1.17.1
 setuptools==82.0.0
 snowballstemmer==3.0.1
-Sphinx==9.1.0
-sphinx-autobuild==2025.8.25
-sphinx-basic-ng==1.0.0b2
-sphinx-copybutton==0.5.2
+Sphinx==8.2.3
 sphinxcontrib-applehelp==2.0.0
 sphinxcontrib-devhelp==2.0.0
 sphinxcontrib-htmlhelp==2.1.0
