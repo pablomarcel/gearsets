@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-transmissions.core.planetary
+"""Core simple-planetary kinematic model.
 
-Core simple-planetary kinematic model.
+This module implements a compact simple-planetary gearset model used by the
+transmission kinematic solver.
 
-Implements the linear Willis/simple planetary relation:
+The linear Willis relation is represented as::
 
-    Ns (ωs − ωc) + Nr (ωr − ωc) = 0
+    Ns * (omega_s - omega_c) + Nr * (omega_r - omega_c) = 0
 
-Equivalent to:
+An equivalent ratio form is::
 
-    (ωs − ωc) / (ωr − ωc) = -Nr / Ns
+    (omega_s - omega_c) / (omega_r - omega_c) = -Nr / Ns
 
-Core V2 goals
--------------
-This module now separates **kinematics** from **strict geometry validation**.
-That means widely cited transmission reference counts can still be analyzed in
-"relaxed" mode even if they fail the strict integer-planet check used for a
-standard simple planetary construction.
+The module separates kinematics from strict geometry validation. This allows
+widely cited transmission reference tooth counts to be analyzed in ``relaxed``
+mode even when they do not satisfy the standard integer-planet check for a
+basic simple planetary construction.
 
-Key compatibility requirement preserved:
-- self.sun, self.ring, self.carrier remain RotatingMember objects because
-  solver.py and other project modules access `.name` on those attributes.
+Compatibility notes
+-------------------
+The public attributes ``sun``, ``ring``, and ``carrier`` remain
+``RotatingMember`` objects because ``solver.py`` and other project modules
+access the ``.name`` attribute on those members.
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ class GearGeometry:
 
 @dataclass(frozen=True)
 class PlanetaryGeometryReport:
-    """Validation/metadata report for a simple planetary gearset."""
+    """Validation and metadata report for a simple planetary gearset."""
 
     ok: bool
     mode: str
@@ -63,38 +63,41 @@ class PlanetaryGeometryReport:
 
     @property
     def strict_ok(self) -> bool:
+        """Return ``True`` when the report passed strict-geometry validation."""
         return self.ok and self.mode == "strict"
 
 
 class PlanetaryGearSet:
-    """
-    Represents a simple planetary gearset.
+    """Represent a simple planetary gearset.
 
     Parameters
     ----------
-    Ns : int
+    Ns:
         Sun tooth count.
-    Nr : int
+    Nr:
         Ring tooth count.
-    name : str
-        Name of gearset.
-    sun, ring, carrier : RotatingMember | None
-        Optional injected rotating members for compound architectures.
-        If omitted, local members are created.
-    geometry_mode : str
-        Either:
-        - "relaxed": kinematics only; does not require integer planet count.
-        - "strict": requires standard simple-planetary integer-planet geometry.
+    name:
+        Name of the gearset.
+    sun:
+        Optional injected sun rotating member for compound architectures.
+    ring:
+        Optional injected ring rotating member for compound architectures.
+    carrier:
+        Optional injected carrier rotating member for compound architectures.
+    geometry_mode:
+        Geometry-validation mode. Use ``"relaxed"`` for kinematics-only
+        analysis or ``"strict"`` to require standard integer-planet simple
+        planetary geometry.
 
     Notes
     -----
-    For a standard simple planetary with one planet meshing sun and ring,
-    the implied planet tooth count is:
+    For a standard simple planetary with one planet meshing the sun and ring,
+    the implied planet tooth count is::
 
         Np = (Nr - Ns) / 2
 
-    In relaxed mode, this is recorded but not enforced.
-    In strict mode, it must be a positive integer.
+    In ``relaxed`` mode this value is recorded but not enforced. In ``strict``
+    mode it must be a positive integer.
     """
 
     VALID_GEOMETRY_MODES = {"relaxed", "strict"}
@@ -144,6 +147,7 @@ class PlanetaryGearSet:
 
     @staticmethod
     def _validate_minimum_counts(Ns: int, Nr: int) -> None:
+        """Validate the minimum tooth-count requirements for kinematics."""
         if Ns <= 0 or Nr <= 0:
             raise ValueError("Gear tooth counts must be positive")
         if Nr <= Ns:
@@ -205,17 +209,20 @@ class PlanetaryGearSet:
         strict: bool | None = None,
         raise_on_error: bool = False,
     ) -> PlanetaryGeometryReport:
-        """
-        Validate gear geometry and return a report.
+        """Validate gear geometry and return a report.
 
         Parameters
         ----------
-        strict : bool | None
-            - True  -> enforce standard integer-planet simple planetary geometry
-            - False -> relaxed validation (kinematic sanity only)
-            - None  -> use this instance's geometry_mode
-        raise_on_error : bool
-            Raise ValueError on invalid geometry.
+        strict:
+            Validation mode override.
+
+            - ``True`` enforces standard integer-planet simple planetary
+              geometry.
+            - ``False`` applies relaxed validation with kinematic sanity checks
+              only.
+            - ``None`` uses this instance's ``geometry_mode``.
+        raise_on_error:
+            Raise ``ValueError`` when the geometry is invalid.
         """
         if strict is None:
             mode = self.geometry_mode
@@ -231,18 +238,20 @@ class PlanetaryGearSet:
 
     @property
     def is_geometry_strict_valid(self) -> bool:
+        """Return whether the current tooth counts pass strict validation."""
         return self.validate_geometry(strict=True, raise_on_error=False).ok
 
     @property
     def has_integer_planet_count(self) -> bool:
+        """Return whether the implied planet tooth count is a positive integer."""
         return self.Np is not None
 
     def planetary_equation(self, ws: float, wr: float, wc: float) -> float:
-        """Residual of the linear Willis/simple planetary constraint."""
+        """Return the residual of the linear Willis planetary constraint."""
         return self.Ns * (ws - wc) + self.Nr * (wr - wc)
 
     def willis_ratio(self, ws: float, wr: float, wc: float) -> float:
-        """Returns the Willis ratio (ws - wc)/(wr - wc)."""
+        """Return the Willis ratio ``(ws - wc) / (wr - wc)``."""
         denom = wr - wc
         if denom == 0:
             raise ZeroDivisionError("Willis ratio undefined because wr == wc")
@@ -255,10 +264,26 @@ class PlanetaryGearSet:
         fixed_member: str,
         input_speed: float = 1.0,
     ) -> Dict[str, float]:
-        """
-        Solve the simple planetary for one input, one output, and one fixed member.
+        """Solve one input, one output, and one fixed member.
 
-        Member names must be one of: 'sun', 'ring', 'carrier'.
+        Parameters
+        ----------
+        input_member:
+            Input member name. Must be one of ``"sun"``, ``"ring"``, or
+            ``"carrier"``.
+        output_member:
+            Output member name. Must be one of ``"sun"``, ``"ring"``, or
+            ``"carrier"``.
+        fixed_member:
+            Fixed member name. Must be one of ``"sun"``, ``"ring"``, or
+            ``"carrier"``.
+        input_speed:
+            Input angular speed.
+
+        Returns
+        -------
+        dict[str, float]
+            Speeds for ``sun``, ``ring``, and ``carrier``.
         """
         members = {"sun", "ring", "carrier"}
 
@@ -307,7 +332,7 @@ class PlanetaryGearSet:
         fixed_member: str,
         input_speed: float = 1.0,
     ) -> float:
-        """Returns ω_in / ω_out."""
+        """Return the speed ratio ``omega_in / omega_out``."""
         speeds = self.solve(
             input_member=input_member,
             output_member=output_member,
@@ -327,7 +352,7 @@ class PlanetaryGearSet:
         fixed_member: str,
         input_speed: float = 1.0,
     ) -> str:
-        """Qualitative classification of the ratio."""
+        """Return a qualitative classification for the solved ratio."""
         r = self.ratio(
             input_member=input_member,
             output_member=output_member,
@@ -349,7 +374,7 @@ class PlanetaryGearSet:
         fixed_member: str,
         input_speed: float = 1.0,
     ) -> None:
-        """Print a standalone summary."""
+        """Print a standalone human-readable summary."""
         speeds = self.solve(
             input_member=input_member,
             output_member=output_member,
