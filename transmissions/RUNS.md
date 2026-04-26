@@ -480,7 +480,7 @@ python -m cli \
   --list-presets
 ```
 
-### Sphinx
+### Sphinx commands
 
 python -m transmissions.cli sphinx-skel transmissions/docs
 python -m sphinx -b html docs docs/_build/html
