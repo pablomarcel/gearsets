@@ -1,20 +1,101 @@
-# Gearsets
+# Gearsets — Universal Planetary Transmission Analyzer
 
-**Universal planetary-gearset automatic transmission analyzer for gearheads.**
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-38BDF8.svg)](https://pablomarcel.github.io/gearsets/)
+[![Build & Publish Docs](https://github.com/pablomarcel/gearsets/actions/workflows/pages.yml/badge.svg)](https://github.com/pablomarcel/gearsets/actions/workflows/pages.yml)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Gearsets is a Python-based analyzer for **planetary automatic transmissions** that lets you define a transmission as data, not hardcoded logic. You describe the **topology** and the **shift schedule** in JSON, and the solver computes **gear ratios** and **member speeds** across transmission states using a generic kinematic core.
+**Gearsets** is a Python engineering toolkit for modeling and analyzing **planetary automatic transmissions** from data-driven topology and shift-schedule definitions.
 
-That makes it practical for exploring and comparing real-world automatic transmissions such as:
+Instead of hardcoding one-off solvers for each gearbox, Gearsets lets you define the transmission architecture in JSON, define the applied elements for each gear state in JSON, and let the generic kinematic solver compute ratios, member speeds, topology summaries, and clean terminal reports.
+
+The project is built for gearheads, drivetrain engineers, students, and anyone who wants to study real planetary automatic transmissions in a repeatable, inspectable, scriptable way.
+
+---
+
+## Live documentation
+
+The full Sphinx documentation is published here:
+
+**https://pablomarcel.github.io/gearsets/**
+
+The documentation site is generated from the package-level Sphinx docs and published through GitHub Pages. It includes API references for the `transmissions` package and the core modules used by the universal solver.
+
+---
+
+## Documentation index
+
+- [Gearsets documentation portal](https://pablomarcel.github.io/gearsets/) — Main GitHub Pages documentation landing page
+- [transmissions package documentation](https://pablomarcel.github.io/gearsets/transmissions/) — API reference for the universal transmission analyzer
+
+The `transmissions` documentation covers the package-level CLI, application layer, JSON I/O helpers, model objects, GUI builders, and core kinematic modules.
+
+---
+
+## Why this project exists
+
+Most transmission-analysis scripts are tightly coupled to one specific architecture. They solve one gearbox, one shift schedule, and one set of assumptions.
+
+Gearsets is designed around a different idea:
+
+> A planetary automatic transmission can be described as topology plus constraints.
+
+That means the app can work from:
+
+1. A **transmission spec JSON** describing gearsets, members, clutches, brakes, sprags, permanent ties, input, and output.
+2. A **shift schedule JSON** describing which constraints are active in each gear state.
+
+The solver then assembles the kinematic equations and computes the results.
+
+This makes Gearsets useful for:
+
+- Studying automatic transmissions
+- Comparing real production transmission families
+- Reverse-engineering planetary layouts
+- Understanding sun/ring/carrier speed behavior
+- Reproducing gear-ratio tables
+- Testing candidate tooth counts
+- Exploring topology changes without rewriting solver code
+
+---
+
+## Real transmission examples
+
+The project has been used to analyze JSON-defined examples such as:
 
 - Ford C4 3-speed
-- ZF 4HP22 4-speed
+- ZF 4HP22 / 4HP24 4-speed
 - ZF 5HP24 5-speed
-- Mercedes W5A-580 5-speed
+- Mercedes-Benz W5A-580 5-speed
 - Allison 2000 series 6-speed
-- Mercedes W7A-700 7-speed
+- Mercedes-Benz W7A-700 7-speed
 - ZF 8HP 8-speed
-- Mercedes W9A-700 9-speed
-- Ford 10R80 10-speed
+- Mercedes-Benz 9G-Tronic / NAG3 9-speed
+- Ford 10R80 / 10R 10-speed
+
+These examples make the package more than a toy solver. Names like **ZF 8HP**, **Ford 10R80**, and **Mercedes 9G-Tronic** connect the project to real drivetrain architectures that enthusiasts and engineers already care about.
+
+---
+
+## What Gearsets can do
+
+Gearsets can compute and report:
+
+- Gear ratios by state
+- Output speed from normalized input speed
+- Member-by-member speed tables
+- Active shift elements by state
+- Topology summaries
+- Tooth-count summaries
+- JSON result payloads
+- Rich terminal tables
+- GUI-assisted transmission spec building
+- GUI-assisted shift schedule building
+- Sphinx documentation skeletons for GitHub Pages
+
+The current core is a **kinematic analyzer**. It solves speed relationships, not torque capacity, clutch pressure, hydraulic control, losses, thermal behavior, durability, or shift quality.
+
+---
 
 ## Why this is cool
 
@@ -56,7 +137,7 @@ It works well for **3, 4, 5, 6, 7, 8, 9, and 10-speed planetary automatic transm
 
 ## Example CLI output
 
-The CLI produces clean tabular summaries that are actually pleasant to read.
+The CLI produces clean tabular summaries that are easy to read.
 
 Example style:
 
