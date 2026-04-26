@@ -1,8 +1,8 @@
-# Transmissions
+# Gearsets
 
 **Universal planetary-gearset automatic transmission analyzer for gearheads.**
 
-Transmissions is a Python-based analyzer for **planetary automatic transmissions** that lets you define a transmission as data, not hardcoded logic. You describe the **topology** and the **shift schedule** in JSON, and the solver computes **gear ratios** and **member speeds** across transmission states using a generic kinematic core.
+Gearsets is a Python-based analyzer for **planetary automatic transmissions** that lets you define a transmission as data, not hardcoded logic. You describe the **topology** and the **shift schedule** in JSON, and the solver computes **gear ratios** and **member speeds** across transmission states using a generic kinematic core.
 
 That makes it practical for exploring and comparing real-world automatic transmissions such as:
 
@@ -511,6 +511,6 @@ Use it as a topology-and-ratio engine, not as a full transmission design validat
 
 ## Summary
 
-Transmissions is a **universal planetary automatic transmission analyzer** that turns JSON-defined topology and shift schedules into practical gear-ratio and member-speed results.
+Gearsets is a **universal planetary automatic transmission analyzer** that turns JSON-defined topology and shift schedules into practical gear-ratio and member-speed results.
 
 If production transmission names like **Ford 10R80**, **ZF 8HP**, **Mercedes W9A-700**, and **Allison 2000** catch your attention, this repo gives you a programmable way to explore how those machines behave.
